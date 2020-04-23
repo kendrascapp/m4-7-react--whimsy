@@ -1,17 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
 
-import LikeButton from '../LikeButton';
+import LikeButton from "../LikeButton";
 
-import Action from './Action';
-import TweetActionIcon from './TweetActionIcon';
+import Action from "./Action";
+import TweetActionIcon from "./TweetActionIcon";
+import { format } from "date-fns";
 
 const propTypes = {
   displayName: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   avatarSrc: PropTypes.string.isRequired,
   tweetContents: PropTypes.string.isRequired,
+  timestamp: PropTypes.object.isRequired,
+  numOfRetweets: PropTypes.number.isRequired,
+  numOfLikes: PropTypes.number.isRequired
 };
 
 const Tweet = ({
@@ -25,7 +29,7 @@ const Tweet = ({
   isLikedByCurrentUser,
   isRetweetedByCurrentUser,
   handleToggleLike,
-  handleToggleRetweet,
+  handleToggleRetweet
 }) => {
   return (
     <Wrapper>
@@ -38,6 +42,13 @@ const Tweet = ({
       </Header>
 
       <TweetContents>{tweetContents}</TweetContents>
+      <Timestamp>{format(timestamp, "h:mm A · MMM Mo, YYYY")}</Timestamp>
+
+      <Divider />
+
+      <Stats>
+        {numOfRetweets} {numOfLikes}
+      </Stats>
 
       <Divider />
 
@@ -46,8 +57,9 @@ const Tweet = ({
           color="rgb(27, 149, 224)"
           size={40}
           onClick={() => {
-            /* noop */
+            handleToggleLike();
           }}
+          isLikedByCurrentUser={isLikedByCurrentUser}
         >
           <TweetActionIcon kind="reply" />
         </Action>
@@ -59,7 +71,7 @@ const Tweet = ({
         >
           <TweetActionIcon
             kind="retweet"
-            color={isRetweetedByCurrentUser ? 'rgb(23, 191, 99)' : undefined}
+            color={isRetweetedByCurrentUser ? "rgb(23, 191, 99)" : undefined}
           />
         </Action>
 
@@ -89,8 +101,8 @@ const Wrapper = styled.div`
   padding: 16px;
   text-align: left;
   /* padding-bottom: 0; */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Ubuntu, 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Ubuntu, "Helvetica Neue", sans-serif;
 `;
 
 const Header = styled.header`
@@ -143,6 +155,7 @@ const Stats = styled.div`
   display: flex;
   align-items: center;
   height: 48px;
+  font-style: bold;
 `;
 
 const Actions = styled.div`
